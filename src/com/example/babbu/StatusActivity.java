@@ -23,8 +23,16 @@ public class StatusActivity extends Activity {
     }
 
     public void onClick(View view) {
-        String statusText = editStatus.getText().toString();
+        final String statusText = editStatus.getText().toString();
 
+        new Thread(){
+            public void run(){
+                Twitter twitter = new Twitter("student", "password");
+                twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+                twitter.setStatus(statusText);
+
+            }
+        }.start();
 
         Log.d(TAG, "OnClicked!" + statusText);
         //view.getId()

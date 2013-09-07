@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 
 public class StatusActivity extends Activity {
     static final String TAG = "StatusActivity";
@@ -27,10 +28,14 @@ public class StatusActivity extends Activity {
 
         new Thread(){
             public void run(){
+               try{
                 Twitter twitter = new Twitter("student", "password");
                 twitter.setAPIRootUrl("http://yamba.marakana.com/api");
                 twitter.setStatus(statusText);
-
+                }catch (TwitterException e){
+                    Log.e(TAG,"Died", e);
+                   e.printStackTrace();
+                }
             }
         }.start();
 

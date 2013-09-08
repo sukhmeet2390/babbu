@@ -1,10 +1,13 @@
 package com.example.babbu;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,22 +25,28 @@ public class StatusActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  Debug.startMethodTracing("Babbu.trace");
+        //  Debug.startMethodTracing("Babbu.trace");
         setContentView(R.layout.status);
         editStatus = (EditText) findViewById(R.id.edit_status);
+    }
+
+    @Override
+    protected void onStop() {
+        //Debug.stopMethodTracing();
+        super.onStop();
     }
 
     public void onClick(View view) {
         String statusText = editStatus.getText().toString();
 
-       new PostToTwitter().execute(statusText);
+        new PostToTwitter().execute(statusText);
         Log.d(TAG, "OnClicked!" + statusText);
         //view.getId()
     }
 
 
     class PostToTwitter extends AsyncTask<String, Void, String> {
-              // new thread
+        // new thread
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -58,13 +67,33 @@ public class StatusActivity extends Activity {
         // ui thread
         protected void onPostExecute(String result) {
             super.onPostExecute(result);    //To change body of overridden methods use File | Settings | File Templates .
-            Toast.makeText(StatusActivity.this, "Sucessfully Posted "+ result, Toast.LENGTH_LONG).show();
+            Toast.makeText(StatusActivity.this, "Sucessfully Posted " + result, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    protected void onStop() {
-        //Debug.stopMethodTracing();
-        super.onStop();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { // return true if u handled the button
+        Intent intent = new Intent(this, UpdaterService.class);// explicit intent as we pass context
+        // this is StatusActivity which is subclass of Context , so we are passing a context here
+        switch (item.getItemId()) {
+            case R.id.start_service:
+                startService(intent);
+                return true;
+
+            case R.id.stop_service:
+                stopService(intent);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+
 }

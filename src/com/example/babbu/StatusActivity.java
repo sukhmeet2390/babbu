@@ -3,6 +3,7 @@ package com.example.babbu;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ public class StatusActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+      //  Debug.startMethodTracing("Babbu.trace");
         setContentView(R.layout.status);
         editStatus = (EditText) findViewById(R.id.edit_status);
     }
@@ -58,5 +60,11 @@ public class StatusActivity extends Activity {
             super.onPostExecute(result);    //To change body of overridden methods use File | Settings | File Templates .
             Toast.makeText(StatusActivity.this, "Sucessfully Posted "+ result, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        //Debug.stopMethodTracing();
+        super.onStop();
     }
 }

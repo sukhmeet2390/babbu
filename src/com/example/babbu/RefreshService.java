@@ -25,8 +25,6 @@ public class RefreshService extends IntentService {
 
     @Override
     public void onCreate() {
-        twitter = new Twitter("student", "password");
-        twitter.setAPIRootUrl("http://yamba.marakana.com/api");
 
         super.onCreate();    //To change body of overridden methods use File | Settings | File Templates.
         Log.d(TAG, "onCreate");
@@ -35,7 +33,8 @@ public class RefreshService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try{
-            List<Twitter.Status> timeline = twitter.getPublicTimeline();
+            List<Twitter.Status> timeline = ((BabbuApp) getApplication()).getTwitter()
+                    .getPublicTimeline();
 
             for (Twitter.Status status : timeline) {
                 Log.d(TAG, String.format("%s %s", status.user.name, status.text));

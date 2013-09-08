@@ -1,6 +1,7 @@
 package com.example.babbu;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,26 +26,37 @@ public class StatusActivity extends Activity {
     }
 
     public void onClick(View view) {
-        final String statusText = editStatus.getText().toString();
+        String statusText = editStatus.getText().toString();
 
-        new Thread() {
-            public void run() {
-                try {
-                    Twitter twitter = new Twitter("student", "password");
-                    twitter.setAPIRootUrl("http://yamba.marakana.com/api");
-                    twitter.setStatus(statusText);
-                    Toast.makeText(StatusActivity.this, "Sucessfully Posted ", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Posted Sucessfully" + statusText);
-
-                } catch (TwitterException e) {
-                    Log.e(TAG, "Died", e);
-                    Toast.makeText(StatusActivity.this, "Fail ", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
+       new PostToTwitter().execute(statusText);
         Log.d(TAG, "OnClicked!" + statusText);
         //view.getId()
+    }
+
+
+    class PostToTwitter extends AsyncTask<String, Void, String> {
+              // new thread
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Twitter twitter = new Twitter("student", "password");
+                twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+                twitter.setStatus(params[0]);
+
+                Log.d(TAG, "Posted Sucessfully" + params[0]);
+                return "Sucess post " + params[0];
+            } catch (TwitterException e) {
+                Log.e(TAG, "Died", e);
+                e.printStackTrace();
+                return "Failed to post " + params[0];
+            }
+        }
+
+        @Override
+        // ui thread
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);    //To change body of overridden methods use File | Settings | File Templates .
+            Toast.makeText(StatusActivity.this, "Sucessfully Posted "+ result, Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class UpdaterService extends Service {
     public static final String TAG = "UpdaterService";
     Twitter twitter;
+    private static final int DELAY = 3;
 
     @Override
     public void onCreate() {
@@ -32,14 +34,22 @@ public class UpdaterService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         new Thread() {
             public void run() {
-                try {
-                    List<Twitter.Status> timeline = twitter.getPublicTimeline();
+                while (true) {
+                    try {
+                        List<Twitter.Status> timeline = twitter.getPublicTimeline();
 
-                    for (Twitter.Status status : timeline) {
-                        Log.d(TAG, String.format("%s %s", status.user.name, status.text));
+                        for (Twitter.Status status : timeline) {
+                            Log.d(TAG, String.format("%s %s", status.user.name, status.text));
+                        }
+                        Thread.sleep(DELAY * 1000);
+                    } catch (TwitterException e) {
+                        Log.d(TAG,"Network exception");
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, " Updater Interrupt", e);
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }.start();

@@ -79,17 +79,20 @@ public class StatusActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) { // return true if u handled the button
-        Intent intent = new Intent(this, UpdaterService.class);// explicit intent as we pass context
+        Intent intentUpdater = new Intent(this, UpdaterService.class);// explicit intent as we pass context
         // this is StatusActivity which is subclass of Context , so we are passing a context here
+        Intent intentRefresh = new Intent(this, RefreshService.class);
         switch (item.getItemId()) {
             case R.id.start_service:
-                startService(intent);
+                startService(intentUpdater);
                 return true;
 
             case R.id.stop_service:
-                stopService(intent);
+                stopService(intentUpdater);
                 return true;
-
+            case R.id.refresh_service:
+                startService(intentRefresh);
+                return true;
             default:
                 return false;
         }

@@ -50,8 +50,7 @@ public class StatusActivity extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Twitter twitter = new Twitter("student", "password");
-                twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+                Twitter twitter = ((BabbuApp)getApplication()).getTwitter();
                 twitter.setStatus(params[0]);
 
                 Log.d(TAG, "Posted Sucessfully" + params[0]);
@@ -67,7 +66,7 @@ public class StatusActivity extends Activity {
         // ui thread
         protected void onPostExecute(String result) {
             super.onPostExecute(result);    //To change body of overridden methods use File | Settings | File Templates .
-            Toast.makeText(StatusActivity.this, "Sucessfully Posted " + result, Toast.LENGTH_LONG).show();
+            Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
         }
     }
 

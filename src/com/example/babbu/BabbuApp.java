@@ -41,9 +41,10 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences newPreferences, String key) {
         //To change body of implemented methods use File | Settings | File Templates.
         twitter = null;
+        this.preferences = newPreferences;
         Log.d(TAG, "On sharedPreferenceChanged for key "+ key);
     }
 }

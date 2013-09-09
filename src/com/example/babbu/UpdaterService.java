@@ -18,16 +18,12 @@ import java.util.List;
  */
 public class UpdaterService extends Service {
     public static final String TAG = "UpdaterService";
-    Twitter twitter;
     private static final int DELAY = 3;
     private static boolean running;
 
     @Override
     public void onCreate() {
-        twitter = new Twitter("student", "password");
-        twitter.setAPIRootUrl("http://yamba.marakana.com/api");
-
-        super.onCreate();    //To change body of overridden methods use File | Settings | File Templates.
+        super.onCreate();
         Log.d(TAG, "onCreate");
     }
 

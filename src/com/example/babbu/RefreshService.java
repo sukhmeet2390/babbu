@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class RefreshService extends IntentService {
     static final String TAG = "RefreshService";
-    Twitter twitter;
 
     public RefreshService() {
         super(TAG);

@@ -93,6 +93,10 @@ public class StatusActivity extends Activity {
             case R.id.refresh_service:
                 startService(intentRefresh);
                 return true;
+            case R.id.preferences:
+                startActivity(new Intent(this, PrefsActivity.class));
+
+                return true;
             default:
                 return false;
         }

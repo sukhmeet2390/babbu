@@ -2,6 +2,7 @@ package com.example.babbu;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -53,6 +54,12 @@ public class StatusData {
         //db.insertOrThrow(TABLE_NAME, null, values); coStly
         //db.insert(TABLE_NAME, null, values);
         db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+    }
+    public Cursor query(){
+        List<Twitter.Status> list = new ArrayList<Twitter.Status>();
+        db = dbHelper.getReadableDatabase();
+        return db.query(TABLE_NAME, null, null, null, null, null, COL_CREATED_AT + " desc");// select * from status;
+
     }
 
 

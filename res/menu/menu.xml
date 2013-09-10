@@ -13,4 +13,7 @@
     <item android:id="@+id/preferences"
           android:title="preferences"
             ></item>
+    <item android:id="@+id/timeline"
+          android:title="timeline"
+            />
 </menu>

@@ -42,6 +42,9 @@ public class RefreshService extends IntentService {
         }catch (TwitterException e){
             Log.e(TAG, "Failed to access twitter service", e);
             e.printStackTrace();
+        }catch (Exception e){
+            Log.e(TAG, "General exception", e);
+            e.printStackTrace();
         }
 
         Log.d(TAG, "onHandleIntent");

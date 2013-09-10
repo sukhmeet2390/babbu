@@ -17,12 +17,14 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     static final String TAG = "BabbuApp";
     private Twitter twitter;
     SharedPreferences preferences;
-
+    StatusData statusData;
 
     @Override
     public void onCreate() {
         super.onCreate();
         // Prefs stuff
+        statusData = new StatusData(this);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
 

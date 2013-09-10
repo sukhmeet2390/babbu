@@ -34,8 +34,9 @@ public class RefreshService extends IntentService {
         try{
             List<Twitter.Status> timeline = ((BabbuApp) getApplication()).getTwitter()
                     .getPublicTimeline();
-
+            StatusData statusData = ((BabbuApp) getApplication()).statusData;
             for (Twitter.Status status : timeline) {
+                statusData.insert(status);
                 Log.d(TAG, String.format("%s %s", status.user.name, status.text));
             }
         }catch (TwitterException e){

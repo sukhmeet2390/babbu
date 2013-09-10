@@ -94,8 +94,11 @@ public class StatusActivity extends Activity {
                 return true;
             case R.id.preferences:
                 startActivity(new Intent(this, PrefsActivity.class));
-
                 return true;
+            case R.id.timeline:
+                startActivity(new Intent(this, TimelineActivity.class));
+                return true;
+
             default:
                 return false;
         }

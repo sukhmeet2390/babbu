@@ -9,10 +9,16 @@
             android:text="Status Timeline"
             style="@style/title_style"
             />
-    <TextView
-            android:layout_height="match_parent"
+    <ScrollView
             android:layout_width="match_parent"
-            android:id="@+id/status_data"
-            />
+            android:layout_height="match_parent"
+            >
+
+        <TextView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:id="@+id/status_data"
+                />
+    </ScrollView>
 
 </LinearLayout>

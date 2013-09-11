@@ -1,6 +1,7 @@
 package com.example.babbu;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -22,6 +23,8 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     SharedPreferences preferences;
     StatusData statusData;
     public static final String ACTION_NEW_STATUS = "com.example.babbu.NEW_STATUS";
+    long last_Seen_At = -1;
+    int count = 0;
 
     @Override
     public void onCreate() {
@@ -55,16 +58,25 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
         Log.d(TAG, "On sharedPreferenceChanged for key " + key);
     }
 
-    public void pullAndInsert() {
+    public int pullAndInsert() {
         try {
             List<Twitter.Status> timeline = getTwitter().getPublicTimeline();
             for (Twitter.Status status : timeline) {
                 statusData.insert(status);
+                if (status.createdAt.getTime() > last_Seen_At) {
+                    count++;
+                    last_Seen_At = status.createdAt.getTime();
+                }
+
                 Log.d(TAG, String.format("%s %s", status.user.name, status.text));
             }
         } catch (TwitterException e) {
             Log.e(TAG, "Failed to pull time-line");
         }
+        if (count > 0) {
+            sendBroadcast(new Intent(ACTION_NEW_STATUS).putExtra("count", count));
+        }
+        return count;
     }
 
 }

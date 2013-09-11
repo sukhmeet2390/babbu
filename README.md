@@ -15,3 +15,6 @@ Adapters
 -- the data doesn't refresh
 -- so i need a broadCast reciever
 -- the best is to start it when timelineActivity is in view, ie when onResume() and stop it in onPause()
+
+-- tried to move TimeLineReciever seperately , breaks.. FIX that
+-- u can also attach some data in Intents

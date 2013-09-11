@@ -1,11 +1,14 @@
 package com.example.babbu;
 
-import android.app.Activity;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -25,7 +28,7 @@ public class TimelineActivity extends ListActivity {
     StatusData statusData;
     Cursor cursor;
     SimpleCursorAdapter simpleCursorAdapter;
-    TimeLineReciever timeLineReciever;
+    TimeLineReceiver timeLineReciever;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class TimelineActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
-        if(timeLineReciever == null) timeLineReciever = new TimeLineReciever();
+        if(timeLineReciever == null) timeLineReciever = new TimeLineReceiver();
         IntentFilter filter = new IntentFilter(BabbuApp.ACTION_NEW_STATUS);
         registerReceiver(timeLineReciever,filter);
     }
@@ -72,5 +75,15 @@ public class TimelineActivity extends ListActivity {
             return true;
         }
     };
+    public class TimeLineReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            cursor = ((BabbuApp) context.getApplicationContext()).statusData.query();
+            simpleCursorAdapter.changeCursor(cursor);
+            Log.d("TimeLineReciever", "cursorChanged with count " + intent.getIntExtra("count", 0));
+
+        }
+    }
 
 }

@@ -31,24 +31,10 @@ public class RefreshService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        try{
-            List<Twitter.Status> timeline = ((BabbuApp) getApplication()).getTwitter()
-                    .getPublicTimeline();
-            StatusData statusData = ((BabbuApp) getApplication()).statusData;
-            for (Twitter.Status status : timeline) {
-                statusData.insert(status);
-                Log.d(TAG, String.format("%s %s", status.user.name, status.text));
-            }
-        }catch (TwitterException e){
-            Log.e(TAG, "Failed to access twitter service", e);
-            e.printStackTrace();
-        }catch (Exception e){
-            Log.e(TAG, "General exception", e);
-            e.printStackTrace();
-        }
-
+        ((BabbuApp) getApplication()).pullAndInsert();
         Log.d(TAG, "onHandleIntent");
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();    //To change body of overridden methods use File | Settings | File Templates.

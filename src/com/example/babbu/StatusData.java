@@ -62,7 +62,6 @@ public class StatusData {
 
     }
 
-
     class DbHelper extends SQLiteOpenHelper{
 
         public DbHelper() {

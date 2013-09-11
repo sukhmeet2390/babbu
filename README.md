@@ -11,3 +11,7 @@ Adapters
 --- List ===> Adapter ====> Cursor
 
 -- Use ViewBinder to bind the values from the database to the view with us to inject in between.
+
+-- the data doesn't refresh
+-- so i need a broadCast reciever
+-- the best is to start it when timelineActivity is in view, ie when onResume() and stop it in onPause()

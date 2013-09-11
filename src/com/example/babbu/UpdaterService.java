@@ -38,18 +38,9 @@ public class UpdaterService extends Service {
             public void run() {
                 try {
                     while (running) {
-                        List<Twitter.Status> timeline = ((BabbuApp) getApplication()).getTwitter()
-                                .getPublicTimeline();
-                        StatusData statusData = ((BabbuApp) getApplication()).statusData;
-                        for (Twitter.Status status : timeline) {
-                            statusData.insert(status);
-                            Log.d(TAG, String.format("%s %s", status.user.name, status.text));
-                        }
+                        ((BabbuApp) getApplication()).pullAndInsert();
                         Thread.sleep(delay * 1000);
                     }
-                } catch (TwitterException e) {
-                    Log.e(TAG, "Failed to access twitter service", e);
-                      e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

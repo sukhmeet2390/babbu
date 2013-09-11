@@ -2,6 +2,7 @@ package com.example.babbu;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -24,6 +25,7 @@ public class TimelineActivity extends ListActivity {
     StatusData statusData;
     Cursor cursor;
     SimpleCursorAdapter simpleCursorAdapter;
+    TimeLineReciever timeLineReciever;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,20 @@ public class TimelineActivity extends ListActivity {
 //            textView.append(String.format("%s : %s\n",user, status));
 //        }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+        if(timeLineReciever == null) timeLineReciever = new TimeLineReciever();
+        IntentFilter filter = new IntentFilter(BabbuApp.ACTION_NEW_STATUS);
+        registerReceiver(timeLineReciever,filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+        unregisterReceiver(timeLineReciever);
     }
 
 

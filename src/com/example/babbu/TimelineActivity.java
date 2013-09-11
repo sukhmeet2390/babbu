@@ -3,6 +3,8 @@ package com.example.babbu;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.DateUtils;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -31,7 +33,8 @@ public class TimelineActivity extends Activity {
 
         cursor = ((BabbuApp) getApplication()).statusData.query();
 
-        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.row, cursor,FROM, TO  );
+        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.row, cursor, FROM, TO);
+        simpleCursorAdapter.setViewBinder(VIEW_BINDER);
         listView.setAdapter(simpleCursorAdapter);
 //        while (cursor.moveToNext()){
 //            String user = cursor.getString(cursor.getColumnIndex(StatusData.COL_USER));
@@ -40,5 +43,19 @@ public class TimelineActivity extends Activity {
 //        }
 
     }
+
+
+    static final SimpleCursorAdapter.ViewBinder VIEW_BINDER = new SimpleCursorAdapter.ViewBinder() {
+        @Override
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            if (view.getId() != R.id.text_time) return false;
+            //if(cursor.getColumnIndex(StatusData.COL_CREATED_AT) != columnIndex) return false;
+            long time = cursor.getLong(cursor.getColumnIndex(StatusData.COL_CREATED_AT));
+            CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(time);
+            ((TextView) view).setText(relativeTime);
+
+            return true;
+        }
+    };
 
 }

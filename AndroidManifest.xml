@@ -3,7 +3,7 @@
           package="com.example.babbu"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="18"/>
+    <uses-sdk android:minSdkVersion="17"/>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
@@ -23,10 +23,15 @@
         <activity android:name=".TimelineActivity"/>
 
         <service android:name=".UpdaterService"></service>
-        <service android:name=".RefreshService"/>
+        <service android:name=".RefreshService">
+            <!--<intent-filter>-->
+                <!--<action android:name="StartMyRefreshService"></action>-->
+            <!--</intent-filter>-->
+        </service>
         <receiver android:name=".BootReciever">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name= "com.example.babbu.REFRESH_ALARM"/>
             </intent-filter>
         </receiver>
     </application>

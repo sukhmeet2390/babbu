@@ -23,8 +23,10 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     SharedPreferences preferences;
     StatusData statusData;
     public static final String ACTION_NEW_STATUS = "com.example.babbu.NEW_STATUS";
+    public static final String ACTION_REFRESH_ALARM = "com.example.babbu.REFRESH_ALARM";
     long last_Seen_At = -1;
     int count = 0;
+    static final Intent refreshAlarm = new Intent(ACTION_REFRESH_ALARM);
 
     @Override
     public void onCreate() {
@@ -54,6 +56,7 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     public void onSharedPreferenceChanged(SharedPreferences newPreferences, String key) {
         //To change body of implemented methods use File | Settings | File Templates.
         twitter = null;
+        sendBroadcast(refreshAlarm);
         this.preferences = newPreferences;
         Log.d(TAG, "On sharedPreferenceChanged for key " + key);
     }
@@ -72,6 +75,8 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
             }
         } catch (TwitterException e) {
             Log.e(TAG, "Failed to pull time-line");
+        } catch (Exception e){
+            Log.e(TAG, "Network exception");
         }
         if (count > 0) {
             sendBroadcast(new Intent(ACTION_NEW_STATUS).putExtra("count", count));

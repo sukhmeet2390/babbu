@@ -30,7 +30,6 @@ public class TimelineActivity extends ListActivity {
     SimpleCursorAdapter simpleCursorAdapter;
     TimeLineReceiver timeLineReciever;
 
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // listView = (ListView) findViewById(android.R.id.list);
@@ -52,6 +51,7 @@ public class TimelineActivity extends ListActivity {
     protected void onResume() {
         super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
         if(timeLineReciever == null) timeLineReciever = new TimeLineReceiver();
+
         IntentFilter filter = new IntentFilter(BabbuApp.ACTION_NEW_STATUS);
         registerReceiver(timeLineReciever,filter);
     }

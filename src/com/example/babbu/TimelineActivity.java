@@ -1,10 +1,8 @@
 package com.example.babbu;
 
 import android.app.ListActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.LoaderManager;
+import android.content.*;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -21,7 +19,7 @@ import android.widget.TextView;
  * Time: 9:07 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TimelineActivity extends ListActivity {
+public class TimelineActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
     static final String[] FROM = {StatusData.COL_USER, StatusData.COL_CREATED_AT, StatusData.COL_STATUS_TEXT};
     static final int[] TO = {R.id.text_user, R.id.text_time, R.id.text_status};
     ListView listView;
@@ -34,6 +32,7 @@ public class TimelineActivity extends ListActivity {
         super.onCreate(savedInstanceState);
        // listView = (ListView) findViewById(android.R.id.list);
         listView = getListView();
+
         cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
         //cursor = ((BabbuApp) getApplication()).statusData.query();
         setTitle("TIMELINE");
@@ -76,6 +75,22 @@ public class TimelineActivity extends ListActivity {
             return true;
         }
     };
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public class TimeLineReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

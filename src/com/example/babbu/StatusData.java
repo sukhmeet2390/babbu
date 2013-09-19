@@ -29,7 +29,7 @@ public class StatusData {
     public static final String COL_CREATED_AT = "created_at";
     public static final String COL_USER = "user";
     public static final String COL_STATUS_TEXT = "status_text";
-    private final String sql = String.format("create table %s ( %s int primary key , %s int, %s text, %s text ) ",
+    public static final String sql = String.format("create table %s ( %s int primary key , %s int, %s text, %s text ) ",
             TABLE_NAME, COL_ID, COL_CREATED_AT, COL_USER, COL_STATUS_TEXT);
 
     Context context;
@@ -38,47 +38,45 @@ public class StatusData {
 
     public StatusData(Context context) {
         this.context = context;
-        dbHelper = new DbHelper();
+        dbHelper = new DbHelper(context);
     }
 
-    public void insert(Twitter.Status status){
-        db = dbHelper.getWritableDatabase();
+    public void insert(Twitter.Status status) {
 
         ContentValues values = new ContentValues();
 
-        values.put(COL_ID,status.id);
+        values.put(COL_ID, status.id);
         values.put(COL_CREATED_AT, status.createdAt.getTime());
         values.put(COL_USER, status.user.name);
-        values.put(COL_STATUS_TEXT,status.text);
+        values.put(COL_STATUS_TEXT, status.text);
 
-        //db.insertOrThrow(TABLE_NAME, null, values); coStly
-        //db.insert(TABLE_NAME, null, values);
-        db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+        context.getContentResolver().insert(StatusProvider.CONTENT_URI, values);
     }
-    public Cursor query(){
-        List<Twitter.Status> list = new ArrayList<Twitter.Status>();
-        db = dbHelper.getReadableDatabase();
-        return db.query(TABLE_NAME, null, null, null, null, null, COL_CREATED_AT + " desc");// select * from status;
+
+    public Cursor query() {
+        return context.getContentResolver().query(StatusProvider.CONTENT_URI, null, null, null, StatusData.COL_CREATED_AT+" DESC");
 
     }
 
-    class DbHelper extends SQLiteOpenHelper{
+}
 
-        public DbHelper() {
-            super(context, DB_NAME, null, DB_VERSION);
-        }
+class DbHelper extends SQLiteOpenHelper {
+    private static String TAG = "SQLiteHelper";
+    public DbHelper(Context context) {
+        super(context, StatusData.DB_NAME, null, StatusData.DB_VERSION);
+    }
 
-        @Override
-        public void onCreate(SQLiteDatabase database) {
-            Log.d(TAG,"onCreate with sql"+sql);
-            database.execSQL(sql);
-        }
+    @Override
+    public void onCreate(SQLiteDatabase database) {
+        Log.d(TAG, "onCreate with sql" + StatusData.sql);
+        database.execSQL(StatusData.sql);
+    }
 
-        @Override
-        public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-            database.execSQL("Drop if exists"+TABLE_NAME);
-            onCreate(database);
-            Log.d(TAG, "onUpdate");
-        }
+    @Override
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        database.execSQL("Drop if exists" + StatusData.TABLE_NAME);
+        onCreate(database);
+        Log.d(TAG, "onUpdate");
     }
 }

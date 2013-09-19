@@ -25,7 +25,7 @@ public class TimelineActivity extends ListActivity {
     static final String[] FROM = {StatusData.COL_USER, StatusData.COL_CREATED_AT, StatusData.COL_STATUS_TEXT};
     static final int[] TO = {R.id.text_user, R.id.text_time, R.id.text_status};
     ListView listView;
-    StatusData statusData;
+    //StatusData statusData;
     Cursor cursor;
     SimpleCursorAdapter simpleCursorAdapter;
     TimeLineReceiver timeLineReciever;
@@ -34,7 +34,8 @@ public class TimelineActivity extends ListActivity {
         super.onCreate(savedInstanceState);
        // listView = (ListView) findViewById(android.R.id.list);
         listView = getListView();
-        cursor = ((BabbuApp) getApplication()).statusData.query();
+        cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
+        //cursor = ((BabbuApp) getApplication()).statusData.query();
         setTitle("TIMELINE");
         simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.row, cursor, FROM, TO);
         simpleCursorAdapter.setViewBinder(VIEW_BINDER);
@@ -78,8 +79,8 @@ public class TimelineActivity extends ListActivity {
     public class TimeLineReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            cursor = ((BabbuApp) context.getApplicationContext()).statusData.query();
+            cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
+            //cursor = ((BabbuApp) context.getApplicationContext()).statusData.query();
             simpleCursorAdapter.changeCursor(cursor);
             Log.d("TimeLineReciever", "cursorChanged with count " + intent.getIntExtra("count", 0));
 

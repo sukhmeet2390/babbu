@@ -21,7 +21,7 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     static final String TAG = "BabbuApp";
     private Twitter twitter;
     SharedPreferences preferences;
-    StatusData statusData;
+    //StatusData statusData;
     public static final String ACTION_NEW_STATUS = "com.example.babbu.NEW_STATUS";
     public static final String ACTION_REFRESH_ALARM = "com.example.babbu.REFRESH_ALARM";
     long last_Seen_At = -1;
@@ -32,7 +32,7 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
     public void onCreate() {
         super.onCreate();
         // Prefs stuff
-        statusData = new StatusData(this);
+        //statusData = new StatusData(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
@@ -65,7 +65,8 @@ public class BabbuApp extends Application implements SharedPreferences.OnSharedP
         try {
             List<Twitter.Status> timeline = getTwitter().getPublicTimeline();
             for (Twitter.Status status : timeline) {
-                statusData.insert(status);
+                getContentResolver().insert(StatusProvider.CONTENT_URI,StatusProvider.statusToValues(status));
+                //statusData.insert(status);
                 if (status.createdAt.getTime() > last_Seen_At) {
                     count++;
                     last_Seen_At = status.createdAt.getTime();

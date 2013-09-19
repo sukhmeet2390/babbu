@@ -2,9 +2,13 @@ package com.example.babbu;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
+import winterwell.jtwitter.Twitter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,4 +62,36 @@ public class StatusProvider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
+    public static ContentValues statusToValues(Twitter.Status status){
+        ContentValues values = new ContentValues();
+        values.put(StatusData.COL_ID, status.id);
+        values.put(StatusData.COL_CREATED_AT, status.createdAt.getTime());
+        values.put(StatusData.COL_USER, status.user.name);
+        values.put(StatusData.COL_STATUS_TEXT, status.text);
+        return values;
+
+
+    }
+}
+
+class DbHelper extends SQLiteOpenHelper {
+    private static String TAG = "SQLiteHelper";
+
+    public DbHelper(Context context) {
+        super(context, StatusData.DB_NAME, null, StatusData.DB_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase database) {
+        Log.d(TAG, "onCreate with sql" + StatusData.sql);
+        database.execSQL(StatusData.sql);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        database.execSQL("Drop if exists" + StatusData.TABLE_NAME);
+        onCreate(database);
+        Log.d(TAG, "onUpdate");
+    }
+
 }

@@ -24,20 +24,27 @@ public class TimelineActivity extends ListActivity implements LoaderManager.Load
     static final int[] TO = {R.id.text_user, R.id.text_time, R.id.text_status};
     ListView listView;
     //StatusData statusData;
-    Cursor cursor;
+
     SimpleCursorAdapter simpleCursorAdapter;
     TimeLineReceiver timeLineReciever;
+    static  final int STATUS_LOADER = 123; // random
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // listView = (ListView) findViewById(android.R.id.list);
         listView = getListView();
 
-        cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
+
+        // cursor = getManageduery                    // manages ourslef but on UI thread
+        //cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );  // here i need to manage cursor
         //cursor = ((BabbuApp) getApplication()).statusData.query();
         setTitle("TIMELINE");
-        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.row, cursor, FROM, TO);
+        simpleCursorAdapter = new SimpleCursorAdapter(this, R.layout.row, null, FROM, TO, 0);
         simpleCursorAdapter.setViewBinder(VIEW_BINDER);
+
+        getLoaderManager().initLoader(STATUS_LOADER, null, this); // start calling callbacks
+        // here null is saved bundle args to pass
+
         listView.setAdapter(simpleCursorAdapter);
 //        while (cursor.moveToNext()){
 //            String user = cursor.getString(cursor.getColumnIndex(StatusData.COL_USER));
@@ -75,28 +82,31 @@ public class TimelineActivity extends ListActivity implements LoaderManager.Load
             return true;
         }
     };
-
+    // ---- Loader Manager loader callbacks---   also see TimeLineReceiver swap cursor
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // initialize the cursor loader
+        return new CursorLoader(this, StatusProvider.CONTENT_URI, null, null, null, StatusData.COL_CREATED_AT+ " DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+       simpleCursorAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        simpleCursorAdapter.swapCursor(null );
     }
 
     public class TimeLineReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
+            getLoaderManager().restartLoader(STATUS_LOADER, null, TimelineActivity.this); // callback is parent whyy???
+            //cursor = getContentResolver().query(StatusProvider.CONTENT_URI,null, null, null, StatusData.COL_CREATED_AT + " DESC" );
             //cursor = ((BabbuApp) context.getApplicationContext()).statusData.query();
-            simpleCursorAdapter.changeCursor(cursor);
+
+            //simpleCursorAdapter.changeCursor(cursor);
             Log.d("TimeLineReciever", "cursorChanged with count " + intent.getIntExtra("count", 0));
 
         }
